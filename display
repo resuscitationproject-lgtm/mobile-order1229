@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>呼び出し表示</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+            height: calc(100vh - 120px);
+        }
+
+        .status-panel {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid;
+        }
+
+        .panel-icon {
+            font-size: 40px;
+        }
+
+        .panel-title {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .panel-count {
+            margin-left: auto;
+            font-size: 32px;
+            font-weight: bold;
+            padding: 8px 20px;
+            border-radius: 20px;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        /* 待機中パネル */
+        .pending-panel .panel-header {
+            border-color: #2196f3;
+        }
+
+        .pending-panel .panel-title {
+            color: #2196f3;
+        }
+
+        .pending-panel .panel-count {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        /* 調理中パネル */
+        .preparing-panel .panel-header {
+            border-color: #ff9800;
+        }
+
+        .preparing-panel .panel-title {
+            color: #ff9800;
+        }
+
+        .preparing-panel .panel-count {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        /* 完成パネル（呼び出し中） */
+        .ready-panel .panel-header {
+            border-color: #00c853;
+        }
+
+        .ready-panel .panel-title {
+            color: #00c853;
+        }
+
+        .ready-panel .panel-count {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        /* 完了パネル */
+        .completed-panel .panel-header {
+            border-color: #9e9e9e;
+        }
+
+        .completed-panel .panel-title {
+            color: #9e9e9e;
+        }
+
+        .completed-panel .panel-count {
+            background: #f5f5f5;
+            color: #616161;
+        }
+
+        .orders-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-content: flex-start;
+        }
+
+        .order-number {
+            font-size: 48px;
+            font-weight: bold;
+            padding: 20px 30px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 120px;
+            transition: all 0.3s;
+        }
+
+        .pending-panel .order-number {
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 3px solid #2196f3;
+        }
+
+        .preparing-panel .order-number {
+            background: #fff3e0;
+            color: #f57c00;
+            border: 3px solid #ff9800;
+        }
+
+        .ready-panel .order-number {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 3px solid #00c853;
+            animation: pulse 1.5s infinite;
+        }
+
+        .completed-panel .order-number {
+            background: #f5f5f5;
+            color: #9e9e9e;
+            border: 3px solid #bdbdbd;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.7);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(0, 200, 83, 0);
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #ccc;
+            font-size: 18px;
+            padding: 40px;
+            width: 100%;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .panel-title {
+                font-size: 24px;
+            }
+            
+            .order-number {
+                font-size: 40px;
+                padding: 15px 25px;
+                min-width: 100px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(4, auto);
+                height: auto;
+            }
+            
+            .panel-icon {
+                font-size: 32px;
+            }
+            
+            .panel-title {
+                font-size: 20px;
+            }
+            
+            .panel-count {
+                font-size: 24px;
+            }
+        }
+
+        /* 音声再生通知 */
+        .sound-indicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 200, 83, 0.95);
+            color: white;
+            padding: 40px 60px;
+            border-radius: 20px;
+            font-size: 32px;
+            font-weight: bold;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        .sound-indicator.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translate(-50%, -60%);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, -50%);
+                opacity: 1;
+            }
+        }
+
+        .sound-icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔔 呼び出し表示</h1>
+        <div class="subtitle">番号が表示されたらお受け取りください</div>
+    </div>
+
+    <div class="main-container">
+        <!-- 待機中 -->
+        <div class="status-panel pending-panel">
+            <div class="panel-header">
+                <div class="panel-icon">⏳</div>
+                <div class="panel-title">待機中</div>
+                <div class="panel-count" id="pendingCount">0</div>
+            </div>
+            <div class="orders-list" id="pendingList">
+                <div class="empty-state">現在ありません</div>
+            </div>
+        </div>
+
+        <!-- 調理中 -->
+        <div class="status-panel preparing-panel">
+            <div class="panel-header">
+                <div class="panel-icon">👨‍🍳</div>
+                <div class="panel-title">調理中</div>
+                <div class="panel-count" id="preparingCount">0</div>
+            </div>
+            <div class="orders-list" id="preparingList">
+                <div class="empty-state">現在ありません</div>
+            </div>
+        </div>
+
+        <!-- 完成（呼び出し中） -->
+        <div class="status-panel ready-panel">
+            <div class="panel-header">
+                <div class="panel-icon">🔔</div>
+                <div class="panel-title">お呼び出し中</div>
+                <div class="panel-count" id="readyCount">0</div>
+            </div>
+            <div class="orders-list" id="readyList">
+                <div class="empty-state">現在ありません</div>
+            </div>
+        </div>
+
+        <!-- 完了 -->
+        <div class="status-panel completed-panel">
+            <div class="panel-header">
+                <div class="panel-icon">✓</div>
+                <div class="panel-title">お渡し済み</div>
+                <div class="panel-count" id="completedCount">0</div>
+            </div>
+            <div class="orders-list" id="completedList">
+                <div class="empty-state">現在ありません</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sound-indicator" id="soundIndicator">
+        <div class="sound-icon">🔔</div>
+        <div id="callingNumber">001番</div>
+        <div style="font-size: 20px; margin-top: 10px;">お呼び出し中</div>
+    </div>
+
+    <script>
+        let previousReadyOrders = new Set();
+        let isFirstLoad = true;
+
+        // LocalStorageから注文データを取得
+        function getOrders() {
+            const orders = localStorage.getItem('orders');
+            return orders ? JSON.parse(orders) : [];
+        }
+
+        // 音声読み上げ
+        function speakOrderNumber(orderNumber) {
+            // Web Speech API対応チェック
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance();
+                utterance.text = `${orderNumber}番、お待たせしました。お受け取りください。`;
+                utterance.lang = 'ja-JP';
+                utterance.rate = 0.9; // 少しゆっくり
+                utterance.pitch = 1.0;
+                utterance.volume = 1.0;
+                
+                // 音声を再生
+                speechSynthesis.speak(utterance);
+                
+                // 画面に通知表示
+                showSoundIndicator(orderNumber);
+            }
+        }
+
+        // 音声再生通知の表示
+        function showSoundIndicator(orderNumber) {
+            const indicator = document.getElementById('soundIndicator');
+            const callingNumber = document.getElementById('callingNumber');
+            
+            callingNumber.textContent = `${String(orderNumber).padStart(3, '0')}番`;
+            indicator.classList.add('show');
+            
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 3000);
+        }
+
+        // 注文表示の更新
+        function renderOrders() {
+            const orders = getOrders();
+            
+            // ステータスごとに分類
+            const statusGroups = {
+                pending: orders.filter(o => o.status === 'pending'),
+                preparing: orders.filter(o => o.status === 'preparing'),
+                ready: orders.filter(o => o.status === 'ready'),
+                completed: orders.filter(o => o.status === 'completed')
+            };
+
+            // 新しく完成になった注文をチェック
+            const currentReadyOrders = new Set(statusGroups.ready.map(o => o.number));
+            
+            if (!isFirstLoad) {
+                // 新しく完成になった注文を見つける
+                currentReadyOrders.forEach(orderNumber => {
+                    if (!previousReadyOrders.has(orderNumber)) {
+                        // 音声で呼び出し
+                        setTimeout(() => {
+                            speakOrderNumber(orderNumber);
+                        }, 500);
+                    }
+                });
+            }
+            
+            previousReadyOrders = currentReadyOrders;
+            isFirstLoad = false;
+
+            // 各ステータスパネルを更新
+            renderStatusPanel('pending', statusGroups.pending);
+            renderStatusPanel('preparing', statusGroups.preparing);
+            renderStatusPanel('ready', statusGroups.ready);
+            renderStatusPanel('completed', statusGroups.completed);
+        }
+
+        function renderStatusPanel(status, orders) {
+            const countElement = document.getElementById(`${status}Count`);
+            const listElement = document.getElementById(`${status}List`);
+            
+            // カウント更新
+            countElement.textContent = orders.length;
+            
+            // リスト更新
+            if (orders.length === 0) {
+                listElement.innerHTML = '<div class="empty-state">現在ありません</div>';
+                return;
+            }
+            
+            // 番号順にソート
+            orders.sort((a, b) => a.number - b.number);
+            
+            let html = '';
+            orders.forEach(order => {
+                html += `<div class="order-number">${String(order.number).padStart(3, '0')}</div>`;
+            });
+            
+            listElement.innerHTML = html;
+        }
+
+        // 自動更新（2秒ごと）
+        setInterval(() => {
+            renderOrders();
+        }, 2000);
+
+        // メニュー変更検知（storage イベント）
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'orders') {
+                renderOrders();
+            }
+        });
+
+        // 初期表示
+        renderOrders();
+
+        // ページ読み込み時に音声合成を初期化（ユーザー操作が必要な場合の対策）
+        document.addEventListener('click', function initSpeech() {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance('');
+                speechSynthesis.speak(utterance);
+            }
+            document.removeEventListener('click', initSpeech);
+        }, { once: true });
+    </script>
+</body>
+</html>
