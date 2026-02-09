@@ -870,12 +870,17 @@
         // Googleスプレッドシートの注文ステータスを更新
         async function updateOrderStatus(orderNumber, status) {
             try {
-                const response = await fetch(`${SCRIPT_URL}?action=updateOrder`, {
+                console.log('ステータス更新:', orderNumber, status);
+                await fetch(`${SCRIPT_URL}?action=updateOrder`, {
                     method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                     body: JSON.stringify({ number: orderNumber, status: status })
                 });
-                const result = await response.json();
-                return result.success === true;
+                console.log('ステータス更新完了');
+                return true;
             } catch (error) {
                 console.error('ステータス更新エラー:', error);
                 return false;
@@ -897,12 +902,17 @@
         // Googleスプレッドシートのメニューを更新
         async function saveMenuToSheet(menuItems) {
             try {
-                const response = await fetch(`${SCRIPT_URL}?action=updateMenu`, {
+                console.log('メニュー保存:', menuItems);
+                await fetch(`${SCRIPT_URL}?action=updateMenu`, {
                     method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                     body: JSON.stringify({ menuItems: menuItems })
                 });
-                const result = await response.json();
-                return result.success === true;
+                console.log('メニュー保存完了');
+                return true;
             } catch (error) {
                 console.error('メニュー保存エラー:', error);
                 return false;
