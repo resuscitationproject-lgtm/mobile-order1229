@@ -378,6 +378,22 @@
     </div>
 
     <script>
+        // ========== Googleスプレッドシート連携設定 ==========
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFxSPGSVr1XxIZ3D5ZTOPOPZIRQhIElnPsfZjlTDo7Q-p1rDRUeyWKtTLC4YzKUVEH1w/exec';
+        
+        // Googleスプレッドシートから注文データを取得
+        async function fetchOrders() {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getOrders&_=${Date.now()}`);
+                const data = await response.json();
+                return data.orders || [];
+            } catch (error) {
+                console.error('注文取得エラー:', error);
+                return [];
+            }
+        }
+        // ========== Googleスプレッドシート連携設定ここまで ==========
+        
         let previousReadyOrders = new Set();
         let isFirstLoad = true;
         let audioEnabled = false;
@@ -395,12 +411,6 @@
             
             console.log('音声通知が有効になりました');
         });
-
-        // LocalStorageから注文データを取得
-        function getOrders() {
-            const orders = localStorage.getItem('orders');
-            return orders ? JSON.parse(orders) : [];
-        }
 
         // 音声読み上げ
         function speakOrderNumber(orderNumber) {
@@ -464,8 +474,8 @@
         }
 
         // 注文表示の更新
-        function renderOrders() {
-            const orders = getOrders();
+        async function renderOrders() {
+            const orders = await fetchOrders();
             
             // ステータスごとに分類
             const statusGroups = {
@@ -525,16 +535,9 @@
         }
 
         // 自動更新（2秒ごと）
-        setInterval(() => {
-            renderOrders();
+        setInterval(async () => {
+            await renderOrders();
         }, 2000);
-
-        // メニュー変更検知（storage イベント）
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'orders') {
-                renderOrders();
-            }
-        });
 
         // 初期表示
         renderOrders();
