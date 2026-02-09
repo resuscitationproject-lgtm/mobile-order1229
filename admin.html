@@ -852,6 +852,64 @@
     </div>
 
     <script>
+        // ========== Googleスプレッドシート連携設定 ==========
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFxSPGSVr1XxIZ3D5ZTOPOPZIRQhIElnPsfZjlTDo7Q-p1rDRUeyWKtTLC4YzKUVEH1w/exec';
+        
+        // Googleスプレッドシートから注文データを取得
+        async function fetchOrders() {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getOrders&_=${Date.now()}`);
+                const data = await response.json();
+                return data.orders || [];
+            } catch (error) {
+                console.error('注文取得エラー:', error);
+                return [];
+            }
+        }
+        
+        // Googleスプレッドシートの注文ステータスを更新
+        async function updateOrderStatus(orderNumber, status) {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=updateOrder`, {
+                    method: 'POST',
+                    body: JSON.stringify({ number: orderNumber, status: status })
+                });
+                const result = await response.json();
+                return result.success === true;
+            } catch (error) {
+                console.error('ステータス更新エラー:', error);
+                return false;
+            }
+        }
+        
+        // Googleスプレッドシートからメニューを取得
+        async function fetchMenu() {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getMenu&_=${Date.now()}`);
+                const data = await response.json();
+                return data.menuItems || [];
+            } catch (error) {
+                console.error('メニュー取得エラー:', error);
+                return [];
+            }
+        }
+        
+        // Googleスプレッドシートのメニューを更新
+        async function saveMenuToSheet(menuItems) {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=updateMenu`, {
+                    method: 'POST',
+                    body: JSON.stringify({ menuItems: menuItems })
+                });
+                const result = await response.json();
+                return result.success === true;
+            } catch (error) {
+                console.error('メニュー保存エラー:', error);
+                return false;
+            }
+        }
+        // ========== Googleスプレッドシート連携設定ここまで ==========
+        
         const ADMIN_PASSWORD = '12345678';
         let currentFilter = 'all';
         let autoRefresh = null;
@@ -869,13 +927,12 @@
         ];
 
         // メニューの初期化
-        function initMenu() {
-            const savedMenu = localStorage.getItem('menuItems');
-            if (savedMenu) {
-                menuItems = JSON.parse(savedMenu);
+        async function initMenu() {
+            const fetchedMenu = await fetchMenu();
+            if (fetchedMenu && fetchedMenu.length > 0) {
+                menuItems = fetchedMenu;
             } else {
                 menuItems = [...defaultMenu];
-                localStorage.setItem('menuItems', JSON.stringify(menuItems));
             }
         }
 
@@ -988,21 +1045,25 @@
         }
 
         // メニューの保存
-        function saveMenu() {
+        async function saveMenu() {
             if (!confirm('メニューを保存して反映しますか？\n※お客様画面にも即座に反映されます')) return;
             
-            localStorage.setItem('menuItems', JSON.stringify(menuItems));
+            const success = await saveMenuToSheet(menuItems);
             
-            const btn = event.target;
-            const originalText = btn.textContent;
-            btn.textContent = '✓ 保存しました！';
-            btn.style.background = '#00c853';
-            
-            setTimeout(() => {
-                btn.textContent = originalText;
-                btn.style.background = '';
-                closeMenuEditor();
-            }, 1500);
+            if (success) {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✓ 保存しました！';
+                btn.style.background = '#00c853';
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                    closeMenuEditor();
+                }, 1500);
+            } else {
+                alert('メニューの保存に失敗しました');
+            }
         }
 
         // ログイン処理
@@ -1047,22 +1108,10 @@
         });
 
         // LocalStorageから注文データを取得
-        function getOrders() {
-            const orders = localStorage.getItem('orders');
-            return orders ? JSON.parse(orders) : [];
-        }
-
-        function saveOrders(orders) {
-            localStorage.setItem('orders', JSON.stringify(orders));
-        }
-
-        function updateOrderStatus(orderNumber, newStatus) {
-            const orders = getOrders();
-            const order = orders.find(o => o.number === orderNumber);
-            if (order) {
-                order.status = newStatus;
-                saveOrders(orders);
-                renderOrders();
+        async function updateOrderStatusAndRefresh(orderNumber, newStatus) {
+            const success = await updateOrderStatus(orderNumber, newStatus);
+            if (success) {
+                await renderOrders();
             }
         }
 
@@ -1120,19 +1169,19 @@
 
             if (status === 'pending') {
                 buttons = `
-                    <button class="action-btn btn-preparing" onclick="updateOrderStatus(${order.number}, 'preparing')">
+                    <button class="action-btn btn-preparing" onclick="updateOrderStatusAndRefresh(${order.number}, 'preparing')">
                         調理開始
                     </button>
                 `;
             } else if (status === 'preparing') {
                 buttons = `
-                    <button class="action-btn btn-ready" onclick="updateOrderStatus(${order.number}, 'ready')">
+                    <button class="action-btn btn-ready" onclick="updateOrderStatusAndRefresh(${order.number}, 'ready')">
                         完成
                     </button>
                 `;
             } else if (status === 'ready') {
                 buttons = `
-                    <button class="action-btn btn-complete" onclick="updateOrderStatus(${order.number}, 'completed')">
+                    <button class="action-btn btn-complete" onclick="updateOrderStatusAndRefresh(${order.number}, 'completed')">
                         提供完了
                     </button>
                 `;
@@ -1147,9 +1196,9 @@
             return buttons;
         }
 
-        function renderOrders() {
+        async function renderOrders() {
             const container = document.getElementById('ordersContainer');
-            const orders = getOrders();
+            const orders = await fetchOrders();
             
             // フィルタリング
             const filteredOrders = currentFilter === 'all' 
@@ -1412,8 +1461,8 @@
 
         // 自動更新
         function startAutoRefresh() {
-            autoRefresh = setInterval(() => {
-                renderOrders();
+            autoRefresh = setInterval(async () => {
+                await renderOrders();
             }, 3000);
         }
 
