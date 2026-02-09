@@ -1125,19 +1125,14 @@
             }
         }
 
-        function deleteOrder(orderNumber) {
-            const orders = getOrders();
-            const filtered = orders.filter(o => o.number !== orderNumber);
-            saveOrders(filtered);
-            renderOrders();
+        async function deleteOrder(orderNumber) {
+            alert('削除機能は現在、Googleスプレッドシート版では利用できません。\nスプレッドシートから直接削除してください。');
+            // TODO: Apps Scriptに削除APIを追加する必要があります
         }
 
-        function clearCompleted() {
-            if (!confirm('完了済みのオーダーを削除しますか？')) return;
-            const orders = getOrders();
-            const filtered = orders.filter(o => o.status !== 'completed');
-            saveOrders(filtered);
-            renderOrders();
+        async function clearCompleted() {
+            alert('一括削除機能は現在、Googleスプレッドシート版では利用できません。\nスプレッドシートから直接削除してください。');
+            // TODO: Apps Scriptに一括削除APIを追加する必要があります
         }
 
         function formatTime(timestamp) {
@@ -1278,20 +1273,21 @@
             container.innerHTML = html;
         }
 
-        function refreshOrders() {
-            renderOrders();
-            // 更新アニメーション
+        async function refreshOrders() {
             const btn = event.target;
             const originalText = btn.textContent;
             btn.textContent = '🔄 更新中...';
+            
+            await renderOrders();
+            
             setTimeout(() => {
                 btn.textContent = originalText;
             }, 500);
         }
 
         // 集計表示
-        function showSummary() {
-            const orders = getOrders();
+        async function showSummary() {
+            const orders = await fetchOrders();
             const todayOrders = orders.filter(o => isToday(o.timestamp));
 
             if (todayOrders.length === 0) {
@@ -1302,12 +1298,24 @@
             // 商品別集計
             const itemSummary = {};
             todayOrders.forEach(order => {
-                for (const [id, item] of Object.entries(order.items)) {
-                    if (!itemSummary[item.name]) {
-                        itemSummary[item.name] = { quantity: 0, amount: 0 };
+                // order.itemsは配列形式で保存されている
+                if (Array.isArray(order.items)) {
+                    order.items.forEach(item => {
+                        if (!itemSummary[item.name]) {
+                            itemSummary[item.name] = { quantity: 0, amount: 0 };
+                        }
+                        itemSummary[item.name].quantity += item.quantity;
+                        itemSummary[item.name].amount += item.price * item.quantity;
+                    });
+                } else {
+                    // 旧形式（オブジェクト形式）への対応
+                    for (const [id, item] of Object.entries(order.items)) {
+                        if (!itemSummary[item.name]) {
+                            itemSummary[item.name] = { quantity: 0, amount: 0 };
+                        }
+                        itemSummary[item.name].quantity += item.quantity;
+                        itemSummary[item.name].amount += item.price * item.quantity;
                     }
-                    itemSummary[item.name].quantity += item.quantity;
-                    itemSummary[item.name].amount += item.price * item.quantity;
                 }
             });
 
@@ -1408,8 +1416,8 @@
         }
 
         // CSV出力
-        function downloadCSV() {
-            const orders = getOrders();
+        async function downloadCSV() {
+            const orders = await fetchOrders();
             const todayOrders = orders.filter(o => isToday(o.timestamp));
 
             if (todayOrders.length === 0) {
@@ -1432,7 +1440,8 @@
                     completed: '完了'
                 }[order.status];
 
-                const items = Object.values(order.items);
+                // order.itemsは配列形式
+                const items = Array.isArray(order.items) ? order.items : Object.values(order.items);
                 items.forEach((item, index) => {
                     const subtotal = item.price * item.quantity;
                     csv += `${order.number},`;
