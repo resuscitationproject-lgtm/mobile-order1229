@@ -358,6 +358,57 @@
     </div>
 
     <script>
+        // ========== Googleスプレッドシート連携設定 ==========
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFxSPGSVr1XxIZ3D5ZTOPOPZIRQhIElnPsfZjlTDo7Q-p1rDRUeyWKtTLC4YzKUVEH1w/exec';
+        
+        // Googleスプレッドシートから注文データを取得
+        async function fetchOrders() {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getOrders&_=${Date.now()}`);
+                const data = await response.json();
+                return data.orders || [];
+            } catch (error) {
+                console.error('注文取得エラー:', error);
+                return [];
+            }
+        }
+        
+        // Googleスプレッドシートに注文を保存
+        async function saveOrderToSheet(orderData) {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=addOrder`, {
+                    method: 'POST',
+                    body: JSON.stringify(orderData)
+                });
+                const result = await response.json();
+                return result.success === true;
+            } catch (error) {
+                console.error('注文保存エラー:', error);
+                alert('注文の保存に失敗しました。もう一度お試しください。');
+                return false;
+            }
+        }
+        
+        // Googleスプレッドシートからメニューを取得
+        async function fetchMenu() {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getMenu&_=${Date.now()}`);
+                const data = await response.json();
+                return data.menuItems || [];
+            } catch (error) {
+                console.error('メニュー取得エラー:', error);
+                return [];
+            }
+        }
+        
+        // 次の注文番号を生成
+        function getNextOrderNumberFromOrders(orders) {
+            if (!orders || orders.length === 0) return '001';
+            const maxNumber = Math.max(...orders.map(o => parseInt(o.number) || 0));
+            return String(maxNumber + 1).padStart(3, '0');
+        }
+        // ========== Googleスプレッドシート連携設定ここまで ==========
+        
         let cart = {};
         let menuItems = [];
 
@@ -373,13 +424,12 @@
         ];
 
         // メニューの初期化
-        function initMenu() {
-            const savedMenu = localStorage.getItem('menuItems');
-            if (savedMenu) {
-                menuItems = JSON.parse(savedMenu);
+        async function initMenu() {
+            const fetchedMenu = await fetchMenu();
+            if (fetchedMenu && fetchedMenu.length > 0) {
+                menuItems = fetchedMenu;
             } else {
                 menuItems = [...defaultMenu];
-                localStorage.setItem('menuItems', JSON.stringify(menuItems));
             }
             renderMenu();
         }
@@ -463,22 +513,6 @@
         }
 
         // LocalStorageから注文データを取得または初期化
-        function getOrders() {
-            const orders = localStorage.getItem('orders');
-            return orders ? JSON.parse(orders) : [];
-        }
-
-        function saveOrder(orderData) {
-            const orders = getOrders();
-            orders.push(orderData);
-            localStorage.setItem('orders', JSON.stringify(orders));
-        }
-
-        function getNextOrderNumber() {
-            const orders = getOrders();
-            return orders.length + 1;
-        }
-
         function updateCart(id, name, price, quantity) {
             if (quantity > 0) {
                 cart[id] = { name, price, quantity };
@@ -520,27 +554,41 @@
         }
 
         // 注文処理
-        document.getElementById('orderBtn').addEventListener('click', () => {
-            const orderNumber = getNextOrderNumber();
+        document.getElementById('orderBtn').addEventListener('click', async () => {
+            const orders = await fetchOrders();
+            const orderNumber = getNextOrderNumberFromOrders(orders);
+            
+            // 注文アイテムを配列形式に変換
+            const orderItems = [];
+            for (const [id, item] of Object.entries(cart)) {
+                orderItems.push({
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity
+                });
+            }
+            
             const orderData = {
                 number: orderNumber,
-                items: { ...cart },
+                items: orderItems,
                 total: Object.values(cart).reduce((sum, item) => sum + (item.price * item.quantity), 0),
                 timestamp: new Date().toISOString(),
-                status: 'pending' // pending, preparing, ready, completed
+                status: 'pending'
             };
 
-            saveOrder(orderData);
-
-            document.getElementById('orderNumber').textContent = String(orderNumber).padStart(3, '0');
-            document.getElementById('orderModal').classList.add('active');
+            const success = await saveOrderToSheet(orderData);
             
-            // カートをリセット
-            cart = {};
-            document.querySelectorAll('.quantity-display').forEach(display => {
-                display.textContent = '0';
-            });
-            renderCart();
+            if (success) {
+                document.getElementById('orderNumber').textContent = String(orderNumber).padStart(3, '0');
+                document.getElementById('orderModal').classList.add('active');
+                
+                // カートをリセット
+                cart = {};
+                document.querySelectorAll('.quantity-display').forEach(display => {
+                    display.textContent = '0';
+                });
+                renderCart();
+            }
         });
 
         function closeModal() {
@@ -556,13 +604,6 @@
         document.getElementById('orderModal').addEventListener('click', (e) => {
             if (e.target.id === 'orderModal') {
                 closeModal();
-            }
-        });
-
-        // メニュー変更検知（storage イベント）
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'menuItems') {
-                initMenu();
             }
         });
 
