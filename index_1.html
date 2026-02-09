@@ -387,19 +387,32 @@
                 console.log('注文データ送信:', orderData);
                 const response = await fetch(`${SCRIPT_URL}?action=addOrder`, {
                     method: 'POST',
-                    mode: 'no-cors',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(orderData)
                 });
                 
-                // no-corsモードではresponseが読めないため、成功したと仮定
-                console.log('注文送信完了');
-                return true;
+                console.log('レスポンスステータス:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('レスポンスデータ:', result);
+                
+                if (result.success) {
+                    console.log('注文送信完了');
+                    return true;
+                } else {
+                    console.error('保存失敗:', result.error);
+                    alert('注文の保存に失敗しました: ' + (result.error || '不明なエラー'));
+                    return false;
+                }
             } catch (error) {
                 console.error('注文保存エラー:', error);
-                alert('注文の保存に失敗しました。もう一度お試しください。');
+                alert('注文の保存に失敗しました。もう一度お試しください。\nエラー: ' + error.message);
                 return false;
             }
         }
