@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -13,743 +12,740 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-```
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
-        background: #f5f5f5;
-        min-height: 100vh;
-    }
-
-    /* ログイン画面 */
-    .login-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 20px;
-    }
-
-    .login-box {
-        background: white;
-        border-radius: 20px;
-        padding: 40px 30px;
-        max-width: 400px;
-        width: 100%;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-    }
-
-    .login-icon {
-        text-align: center;
-        font-size: 60px;
-        margin-bottom: 20px;
-    }
-
-    .login-title {
-        text-align: center;
-        font-size: 24px;
-        color: #333;
-        margin-bottom: 30px;
-        font-weight: bold;
-    }
-
-    .input-group {
-        margin-bottom: 20px;
-    }
-
-    .input-label {
-        display: block;
-        font-size: 14px;
-        color: #666;
-        margin-bottom: 8px;
-        font-weight: 500;
-    }
-
-    .input-field {
-        width: 100%;
-        padding: 15px;
-        border: 2px solid #e0e0e0;
-        border-radius: 10px;
-        font-size: 16px;
-        transition: all 0.3s;
-    }
-
-    .input-field:focus {
-        outline: none;
-        border-color: #667eea;
-    }
-
-    .login-btn {
-        width: 100%;
-        padding: 15px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-
-    .login-btn:active {
-        transform: scale(0.98);
-    }
-
-    .error-message {
-        color: #f44336;
-        font-size: 14px;
-        margin-top: 10px;
-        text-align: center;
-        display: none;
-    }
-
-    .error-message.show {
-        display: block;
-    }
-
-    .main-app {
-        display: none;
-    }
-
-    .main-app.active {
-        display: block;
-    }
-
-    .header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 20px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        position: sticky;
-        top: 0;
-        z-index: 100;
-    }
-
-    .header-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 12px;
-    }
-
-    .logout-btn {
-        padding: 8px 16px;
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 8px;
-        font-size: 13px;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .logout-btn:active {
-        transform: scale(0.95);
-    }
-
-    h1 {
-        font-size: 24px;
-    }
-
-    .stats {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        margin-top: 12px;
-        font-size: 14px;
-    }
-
-    .stat-item {
-        background: rgba(255, 255, 255, 0.2);
-        padding: 8px 16px;
-        border-radius: 20px;
-    }
-
-    .stat-number {
-        font-size: 20px;
-        font-weight: bold;
-        margin-left: 5px;
-    }
-
-    .controls {
-        display: flex;
-        gap: 10px;
-        padding: 15px;
-        background: white;
-        border-bottom: 1px solid #e0e0e0;
-    }
-
-    .control-btn {
-        flex: 1;
-        padding: 12px;
-        border: 2px solid #667eea;
-        background: white;
-        color: #667eea;
-        border-radius: 10px;
-        font-size: 14px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .control-btn.active {
-        background: #667eea;
-        color: white;
-    }
-
-    .control-btn:active {
-        transform: scale(0.95);
-    }
-
-    .orders-container {
-        padding: 15px;
-        padding-bottom: 100px;
-    }
-
-    .order-card {
-        background: white;
-        border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 15px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        border-left: 5px solid #667eea;
-    }
-
-    .order-card.preparing {
-        border-left-color: #ffa500;
-    }
-
-    .order-card.ready {
-        border-left-color: #00c853;
-    }
-
-    .order-card.completed {
-        border-left-color: #999;
-        opacity: 0.7;
-    }
-
-    .order-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-        padding-bottom: 12px;
-        border-bottom: 2px solid #f0f0f0;
-    }
-
-    .order-number {
-        font-size: 32px;
-        font-weight: bold;
-        color: #667eea;
-    }
-
-    .order-time {
-        font-size: 13px;
-        color: #666;
-    }
-
-    .order-items {
-        margin-bottom: 15px;
-    }
-
-    .order-item {
-        display: flex;
-        justify-content: space-between;
-        padding: 8px 0;
-        font-size: 15px;
-    }
-
-    .item-name-qty {
-        color: #333;
-        font-weight: 500;
-    }
-
-    .item-price {
-        color: #666;
-    }
-
-    .order-total {
-        display: flex;
-        justify-content: space-between;
-        padding: 12px 0;
-        border-top: 2px solid #f0f0f0;
-        font-size: 18px;
-        font-weight: bold;
-        color: #333;
-    }
-
-    .total-amount {
-        color: #667eea;
-    }
-
-    .order-actions {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        margin-top: 15px;
-    }
-
-    .action-btn {
-        padding: 14px;
-        border: none;
-        border-radius: 10px;
-        font-size: 15px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .action-btn:active {
-        transform: scale(0.95);
-    }
-
-    .btn-preparing {
-        background: #ffa500;
-        color: white;
-    }
-
-    .btn-ready {
-        background: #00c853;
-        color: white;
-    }
-
-    .btn-complete {
-        background: #999;
-        color: white;
-    }
-
-    .btn-delete {
-        background: #f44336;
-        color: white;
-    }
-
-    .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        color: #999;
-    }
-
-    .empty-icon {
-        font-size: 60px;
-        margin-bottom: 20px;
-    }
-
-    .empty-text {
-        font-size: 16px;
-    }
-
-    .status-badge {
-        display: inline-block;
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: bold;
-        margin-left: 10px;
-    }
-
-    .badge-pending {
-        background: #e3f2fd;
-        color: #1976d2;
-    }
-
-    .badge-preparing {
-        background: #fff3e0;
-        color: #f57c00;
-    }
-
-    .badge-ready {
-        background: #e8f5e9;
-        color: #2e7d32;
-    }
-
-    .badge-completed {
-        background: #f5f5f5;
-        color: #666;
-    }
-
-    .bottom-bar {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: white;
-        padding: 15px;
-        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .bottom-buttons {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 10px;
-    }
-
-    .bottom-btn {
-        flex: 1;
-        padding: 15px;
-        border: none;
-        border-radius: 10px;
-        font-size: 15px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .btn-refresh {
-        background: #667eea;
-        color: white;
-    }
-
-    .btn-summary {
-        background: #00c853;
-        color: white;
-    }
-
-    .btn-csv {
-        background: #ff9800;
-        color: white;
-    }
-
-    .btn-spreadsheet {
-        background: #4caf50;
-        color: white;
-    }
-
-    .btn-clear-all {
-        background: #f44336;
-        color: white;
-    }
-
-    .btn-refresh:active,
-    .btn-summary:active,
-    .btn-csv:active,
-    .btn-spreadsheet:active,
-    .btn-clear-all:active {
-        transform: scale(0.95);
-    }
-
-    .notification-dot {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        background: #f44336;
-        border-radius: 50%;
-        margin-left: 5px;
-        animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.3; }
-    }
-
-    /* メニュー管理モーダル */
-    .menu-modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        z-index: 1000;
-        overflow-y: auto;
-    }
-
-    .menu-modal.active {
-        display: block;
-    }
-
-    .menu-content {
-        background: white;
-        margin: 20px;
-        margin-bottom: 100px;
-        border-radius: 20px;
-        padding: 25px;
-        animation: slideUp 0.3s ease;
-    }
-
-    .menu-list {
-        margin-bottom: 20px;
-    }
-
-    .menu-edit-item {
-        background: #f8f9fa;
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 10px;
-        border-left: 4px solid #667eea;
-    }
-
-    .menu-edit-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-    }
-
-    .menu-edit-category {
-        font-size: 12px;
-        color: #667eea;
-        font-weight: bold;
-    }
-
-    .delete-menu-btn {
-        padding: 6px 12px;
-        background: #f44336;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        font-size: 12px;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .delete-menu-btn:active {
-        transform: scale(0.95);
-    }
-
-    .menu-edit-fields {
-        display: grid;
-        gap: 10px;
-    }
-
-    .edit-field {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    .edit-label {
-        font-size: 12px;
-        color: #666;
-        font-weight: 500;
-    }
-
-    .edit-input {
-        padding: 10px;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        font-size: 15px;
-        transition: all 0.3s;
-    }
-
-    .edit-input:focus {
-        outline: none;
-        border-color: #667eea;
-    }
-
-    .add-menu-section {
-        background: #f0f4ff;
-        border-radius: 10px;
-        padding: 20px;
-        margin-top: 20px;
-    }
-
-    .add-menu-title {
-        font-size: 16px;
-        font-weight: bold;
-        color: #667eea;
-        margin-bottom: 15px;
-    }
-
-    .add-menu-btn {
-        width: 100%;
-        padding: 15px;
-        background: #667eea;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-size: 15px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.2s;
-        margin-top: 10px;
-    }
-
-    .add-menu-btn:active {
-        transform: scale(0.98);
-    }
-
-    .save-menu-btn {
-        width: 100%;
-        padding: 18px;
-        background: linear-gradient(135deg, #00c853 0%, #00e676 100%);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.2s;
-        margin-top: 20px;
-    }
-
-    .save-menu-btn:active {
-        transform: scale(0.98);
-    }
-
-    .category-select {
-        padding: 10px;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        font-size: 15px;
-        background: white;
-    }
-
-    /* 集計モーダル */
-    .summary-modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        z-index: 1000;
-        overflow-y: auto;
-    }
-
-    .summary-modal.active {
-        display: block;
-    }
-
-    .summary-content {
-        background: white;
-        margin: 20px;
-        margin-bottom: 100px;
-        border-radius: 20px;
-        padding: 25px;
-        animation: slideUp 0.3s ease;
-    }
-
-    @keyframes slideUp {
-        from {
-            transform: translateY(50px);
-            opacity: 0;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
         }
-        to {
-            transform: translateY(0);
-            opacity: 1;
+
+        /* ログイン画面 */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
         }
-    }
 
-    .summary-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-        border-bottom: 2px solid #f0f0f0;
-    }
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
 
-    .summary-title {
-        font-size: 22px;
-        font-weight: bold;
-        color: #333;
-    }
+        .login-icon {
+            text-align: center;
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
 
-    .close-btn {
-        width: 35px;
-        height: 35px;
-        border: none;
-        background: #f0f0f0;
-        color: #666;
-        border-radius: 50%;
-        font-size: 20px;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
+        .login-title {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
 
-    .close-btn:active {
-        transform: scale(0.9);
-    }
+        .input-group {
+            margin-bottom: 20px;
+        }
 
-    .summary-section {
-        margin-bottom: 25px;
-    }
+        .input-label {
+            display: block;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
 
-    .summary-section-title {
-        font-size: 16px;
-        font-weight: bold;
-        color: #667eea;
-        margin-bottom: 12px;
-        padding-left: 10px;
-        border-left: 4px solid #667eea;
-    }
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
 
-    .summary-item {
-        display: flex;
-        justify-content: space-between;
-        padding: 10px 0;
-        border-bottom: 1px solid #f0f0f0;
-    }
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+        }
 
-    .summary-item:last-child {
-        border-bottom: none;
-    }
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
 
-    .summary-label {
-        color: #666;
-        font-size: 15px;
-    }
+        .login-btn:active {
+            transform: scale(0.98);
+        }
 
-    .summary-value {
-        font-weight: bold;
-        color: #333;
-        font-size: 15px;
-    }
+        .error-message {
+            color: #f44336;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
 
-    .summary-total {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 20px;
-        border-radius: 15px;
-        margin-top: 20px;
-    }
+        .error-message.show {
+            display: block;
+        }
 
-    .summary-total-label {
-        font-size: 16px;
-        margin-bottom: 8px;
-    }
+        .main-app {
+            display: none;
+        }
 
-    .summary-total-value {
-        font-size: 32px;
-        font-weight: bold;
-    }
+        .main-app.active {
+            display: block;
+        }
 
-    .summary-text {
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 10px;
-        margin-top: 20px;
-        white-space: pre-wrap;
-        font-size: 14px;
-        line-height: 1.8;
-        color: #333;
-        font-family: monospace;
-    }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-    .copy-btn {
-        width: 100%;
-        padding: 15px;
-        background: #667eea;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-size: 15px;
-        font-weight: bold;
-        cursor: pointer;
-        margin-top: 15px;
-        transition: all 0.2s;
-    }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
 
-    .copy-btn:active {
-        transform: scale(0.98);
-    }
-</style>
-```
+        .logout-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
 
+        .logout-btn:active {
+            transform: scale(0.95);
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .control-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .control-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .orders-container {
+            padding: 15px;
+            padding-bottom: 100px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #667eea;
+        }
+
+        .order-card.preparing {
+            border-left-color: #ffa500;
+        }
+
+        .order-card.ready {
+            border-left-color: #00c853;
+        }
+
+        .order-card.completed {
+            border-left-color: #999;
+            opacity: 0.7;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .order-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .order-time {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .order-items {
+            margin-bottom: 15px;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 15px;
+        }
+
+        .item-name-qty {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .item-price {
+            color: #666;
+        }
+
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-top: 2px solid #f0f0f0;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .total-amount {
+            color: #667eea;
+        }
+
+        .order-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-btn {
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-preparing {
+            background: #ffa500;
+            color: white;
+        }
+
+        .btn-ready {
+            background: #00c853;
+            color: white;
+        }
+
+        .btn-complete {
+            background: #999;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #f44336;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .empty-text {
+            font-size: 16px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .badge-pending {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-preparing {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .badge-ready {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-completed {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 15px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .bottom-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .bottom-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-refresh {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-summary {
+            background: #00c853;
+            color: white;
+        }
+
+        .btn-csv {
+            background: #ff9800;
+            color: white;
+        }
+
+        .btn-spreadsheet {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-clear-all {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-refresh:active,
+        .btn-summary:active,
+        .btn-csv:active,
+        .btn-spreadsheet:active,
+        .btn-clear-all:active {
+            transform: scale(0.95);
+        }
+
+        .notification-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #f44336;
+            border-radius: 50%;
+            margin-left: 5px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* メニュー管理モーダル */
+        .menu-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .menu-modal.active {
+            display: block;
+        }
+
+        .menu-content {
+            background: white;
+            margin: 20px;
+            margin-bottom: 100px;
+            border-radius: 20px;
+            padding: 25px;
+            animation: slideUp 0.3s ease;
+        }
+
+        .menu-list {
+            margin-bottom: 20px;
+        }
+
+        .menu-edit-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .menu-edit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .menu-edit-category {
+            font-size: 12px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .delete-menu-btn {
+            padding: 6px 12px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .delete-menu-btn:active {
+            transform: scale(0.95);
+        }
+
+        .menu-edit-fields {
+            display: grid;
+            gap: 10px;
+        }
+
+        .edit-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .edit-label {
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .edit-input {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        .edit-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .add-menu-section {
+            background: #f0f4ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .add-menu-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .add-menu-btn {
+            width: 100%;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+
+        .add-menu-btn:active {
+            transform: scale(0.98);
+        }
+
+        .save-menu-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #00c853 0%, #00e676 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 20px;
+        }
+
+        .save-menu-btn:active {
+            transform: scale(0.98);
+        }
+
+        .category-select {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+        }
+
+        /* 集計モーダル */
+        .summary-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .summary-modal.active {
+            display: block;
+        }
+
+        .summary-content {
+            background: white;
+            margin: 20px;
+            margin-bottom: 100px;
+            border-radius: 20px;
+            padding: 25px;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .summary-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .close-btn {
+            width: 35px;
+            height: 35px;
+            border: none;
+            background: #f0f0f0;
+            color: #666;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .close-btn:active {
+            transform: scale(0.9);
+        }
+
+        .summary-section {
+            margin-bottom: 25px;
+        }
+
+        .summary-section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 12px;
+            padding-left: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: #666;
+            font-size: 15px;
+        }
+
+        .summary-value {
+            font-weight: bold;
+            color: #333;
+            font-size: 15px;
+        }
+
+        .summary-total {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .summary-total-label {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .summary-total-value {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .summary-text {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #333;
+            font-family: monospace;
+        }
+
+        .copy-btn {
+            width: 100%;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:active {
+            transform: scale(0.98);
+        }
+    </style>
 </head>
 <body>
     <!-- ログイン画面 -->
@@ -768,572 +764,569 @@
         </div>
     </div>
 
-```
-<!-- メイン画面 -->
-<div class="main-app" id="mainApp">
-<div class="header">
-    <div class="header-top">
-        <h1>📋 オーダー管理</h1>
-        <button class="logout-btn" onclick="logout()">ログアウト</button>
-    </div>
-    <div class="stats">
-        <div class="stat-item">
-            待機中 <span class="stat-number" id="pendingCount">0</span>
+    <!-- メイン画面 -->
+    <div class="main-app" id="mainApp">
+    <div class="header">
+        <div class="header-top">
+            <h1>📋 オーダー管理</h1>
+            <button class="logout-btn" onclick="logout()">ログアウト</button>
         </div>
-        <div class="stat-item">
-            調理中 <span class="stat-number" id="preparingCount">0</span>
+        <div class="stats">
+            <div class="stat-item">
+                待機中 <span class="stat-number" id="pendingCount">0</span>
+            </div>
+            <div class="stat-item">
+                調理中 <span class="stat-number" id="preparingCount">0</span>
+            </div>
+            <div class="stat-item">
+                完成 <span class="stat-number" id="readyCount">0</span>
+            </div>
         </div>
-        <div class="stat-item">
-            完成 <span class="stat-number" id="readyCount">0</span>
+    </div>
+
+    <div class="controls">
+        <button class="control-btn active" data-filter="all">全て</button>
+        <button class="control-btn" data-filter="pending">待機中</button>
+        <button class="control-btn" data-filter="preparing">調理中</button>
+        <button class="control-btn" data-filter="ready">完成</button>
+    </div>
+
+    <div class="orders-container" id="ordersContainer">
+        <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <div class="empty-text">現在オーダーはありません</div>
         </div>
     </div>
-</div>
 
-<div class="controls">
-    <button class="control-btn active" data-filter="all">全て</button>
-    <button class="control-btn" data-filter="pending">待機中</button>
-    <button class="control-btn" data-filter="preparing">調理中</button>
-    <button class="control-btn" data-filter="ready">完成</button>
-</div>
-
-<div class="orders-container" id="ordersContainer">
-    <div class="empty-state">
-        <div class="empty-icon">📭</div>
-        <div class="empty-text">現在オーダーはありません</div>
-    </div>
-</div>
-
-<div class="bottom-bar">
-    <div class="bottom-buttons">
-        <button class="bottom-btn btn-refresh" onclick="refreshOrders()">🔄 更新</button>
-        <button class="bottom-btn btn-summary" onclick="showSummary()">📊 集計</button>
-    </div>
-    <div class="bottom-buttons">
-        <button class="bottom-btn btn-csv" onclick="downloadCSV()">📥 CSV</button>
-        <button class="bottom-btn btn-spreadsheet" onclick="openSpreadsheet()">📄 スプレッドシート</button>
-    </div>
-    <div class="bottom-buttons">
-        <button class="bottom-btn btn-clear-all" onclick="clearCompleted()">🗑️ 完了削除</button>
-    </div>
-</div>
-
-<!-- 集計モーダル -->
-<div class="summary-modal" id="summaryModal">
-    <div class="summary-content">
-        <div class="summary-header">
-            <div class="summary-title">本日の集計</div>
-            <button class="close-btn" onclick="closeSummary()">×</button>
+    <div class="bottom-bar">
+        <div class="bottom-buttons">
+            <button class="bottom-btn btn-refresh" onclick="refreshOrders()">🔄 更新</button>
+            <button class="bottom-btn btn-summary" onclick="showSummary()">📊 集計</button>
         </div>
-        <div id="summaryBody"></div>
+        <div class="bottom-buttons">
+            <button class="bottom-btn btn-csv" onclick="downloadCSV()">📥 CSV</button>
+            <button class="bottom-btn btn-spreadsheet" onclick="openSpreadsheet()">📄 スプレッドシート</button>
+        </div>
+        <div class="bottom-buttons">
+            <button class="bottom-btn btn-clear-all" onclick="clearCompleted()">🗑️ 完了削除</button>
+        </div>
     </div>
-</div>
 
-</div>
+    <!-- 集計モーダル -->
+    <div class="summary-modal" id="summaryModal">
+        <div class="summary-content">
+            <div class="summary-header">
+                <div class="summary-title">本日の集計</div>
+                <button class="close-btn" onclick="closeSummary()">×</button>
+            </div>
+            <div id="summaryBody"></div>
+        </div>
+    </div>
 
-<script>
-    // ========== Googleスプレッドシート連携設定 ==========
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxA8NXDjSAVtYftzIyJ3wwzdVzem_VC1xyum7MOq18zOGeffkwJ1VoGzN_sYwWOWbzfpA/exec';
-    
-    // Googleスプレッドシートから注文データを取得
-    async function fetchOrders() {
-        try {
-            const response = await fetch(`${SCRIPT_URL}?action=getOrders&_=${Date.now()}`);
-            const data = await response.json();
-            return data.orders || [];
-        } catch (error) {
-            console.error('注文取得エラー:', error);
-            return [];
-        }
-    }
-    
-    // Googleスプレッドシートの注文ステータスを更新
-    async function updateOrderStatus(orderNumber, status) {
-        try {
-            console.log('ステータス更新:', orderNumber, status);
-            const response = await fetch(`${SCRIPT_URL}?action=updateOrder`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ number: orderNumber, status: status })
-            });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+    </div>
+
+    <script>
+        // ========== Googleスプレッドシート連携設定 ==========
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxA8NXDjSAVtYftzIyJ3wwzdVzem_VC1xyum7MOq18zOGeffkwJ1VoGzN_sYwWOWbzfpA/exec';
+        
+        // Googleスプレッドシートから注文データを取得
+        async function fetchOrders() {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getOrders&_=${Date.now()}`);
+                const data = await response.json();
+                return data.orders || [];
+            } catch (error) {
+                console.error('注文取得エラー:', error);
+                return [];
             }
-            
-            const result = await response.json();
-            console.log('ステータス更新レスポンス:', result);
-            
-            if (result.success) {
-                console.log('ステータス更新完了');
-                return true;
-            } else {
-                console.error('更新失敗:', result.error);
+        }
+        
+        // Googleスプレッドシートの注文ステータスを更新
+        async function updateOrderStatus(orderNumber, status) {
+            try {
+                console.log('ステータス更新:', orderNumber, status);
+                const response = await fetch(`${SCRIPT_URL}?action=updateOrder`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ number: orderNumber, status: status })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('ステータス更新レスポンス:', result);
+                
+                if (result.success) {
+                    console.log('ステータス更新完了');
+                    return true;
+                } else {
+                    console.error('更新失敗:', result.error);
+                    return false;
+                }
+            } catch (error) {
+                console.error('ステータス更新エラー:', error);
                 return false;
             }
-        } catch (error) {
-            console.error('ステータス更新エラー:', error);
-            return false;
         }
-    }
-    
-    // Googleスプレッドシートからメニューを取得
-    async function fetchMenu() {
-        try {
-            const response = await fetch(`${SCRIPT_URL}?action=getMenu&_=${Date.now()}`);
-            const data = await response.json();
-            return data.menuItems || [];
-        } catch (error) {
-            console.error('メニュー取得エラー:', error);
-            return [];
-        }
-    }
-    
-    // Googleスプレッドシートのメニューを更新
-    // ========== Googleスプレッドシート連携設定ここまで ==========
-    
-    const ADMIN_PASSWORD = '12345678';
-    let currentFilter = 'all';
-    let autoRefresh = null;
-
-    // スプレッドシートを開く
-    function openSpreadsheet() {
-        const spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/170A7eiI4K9ERjVyJsVRcxz7u0u-to1LANg5XwJUhygc/edit';
-        window.open(spreadsheetUrl, '_blank');
-    }
-
-
-    // ログイン処理
-    document.getElementById('loginForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const password = document.getElementById('passwordInput').value;
-        const errorMessage = document.getElementById('errorMessage');
-
-        if (password === ADMIN_PASSWORD) {
-            document.getElementById('loginContainer').style.display = 'none';
-            document.getElementById('mainApp').classList.add('active');
-            sessionStorage.setItem('adminLoggedIn', 'true');
-            renderOrders();
-            startAutoRefresh();
-        } else {
-            errorMessage.classList.add('show');
-            setTimeout(() => {
-                errorMessage.classList.remove('show');
-            }, 3000);
-        }
-    });
-
-    // ログアウト
-    function logout() {
-        if (confirm('ログアウトしますか？')) {
-            sessionStorage.removeItem('adminLoggedIn');
-            stopAutoRefresh();
-            location.reload();
-        }
-    }
-
-    // ページ読み込み時のログインチェック
-    window.addEventListener('load', () => {
-        if (sessionStorage.getItem('adminLoggedIn') === 'true') {
-            document.getElementById('loginContainer').style.display = 'none';
-            document.getElementById('mainApp').classList.add('active');
-            renderOrders();
-            startAutoRefresh();
-        }
-    });
-
-    // LocalStorageから注文データを取得
-    async function updateOrderStatusAndRefresh(orderNumber, newStatus) {
-        const success = await updateOrderStatus(orderNumber, newStatus);
-        if (success) {
-            await renderOrders();
-        }
-    }
-
-    async function deleteOrder(orderNumber) {
-        alert('削除機能は現在、Googleスプレッドシート版では利用できません。\nスプレッドシートから直接削除してください。');
-        // TODO: Apps Scriptに削除APIを追加する必要があります
-    }
-
-    async function clearCompleted() {
-        alert('一括削除機能は現在、Googleスプレッドシート版では利用できません。\nスプレッドシートから直接削除してください。');
-        // TODO: Apps Scriptに一括削除APIを追加する必要があります
-    }
-
-    function formatTime(timestamp) {
-        const date = new Date(timestamp);
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        return `${hours}:${minutes}`;
-    }
-
-    function formatDate(timestamp) {
-        const date = new Date(timestamp);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}/${month}/${day}`;
-    }
-
-    function isToday(timestamp) {
-        const date = new Date(timestamp);
-        const today = new Date();
-        return date.getFullYear() === today.getFullYear() &&
-               date.getMonth() === today.getMonth() &&
-               date.getDate() === today.getDate();
-    }
-
-    function getStatusBadge(status) {
-        const badges = {
-            pending: '<span class="status-badge badge-pending">待機中</span>',
-            preparing: '<span class="status-badge badge-preparing">調理中</span>',
-            ready: '<span class="status-badge badge-ready">完成</span>',
-            completed: '<span class="status-badge badge-completed">完了</span>'
-        };
-        return badges[status] || '';
-    }
-
-    function getActionButtons(order) {
-        const status = order.status;
-        let buttons = '';
-
-        if (status === 'pending') {
-            buttons = `
-                <button class="action-btn btn-preparing" onclick="updateOrderStatusAndRefresh(${order.number}, 'preparing')">
-                    調理開始
-                </button>
-            `;
-        } else if (status === 'preparing') {
-            buttons = `
-                <button class="action-btn btn-ready" onclick="updateOrderStatusAndRefresh(${order.number}, 'ready')">
-                    完成
-                </button>
-            `;
-        } else if (status === 'ready') {
-            buttons = `
-                <button class="action-btn btn-complete" onclick="updateOrderStatusAndRefresh(${order.number}, 'completed')">
-                    提供完了
-                </button>
-            `;
-        }
-
-        buttons += `
-            <button class="action-btn btn-delete" onclick="deleteOrder(${order.number})">
-                削除
-            </button>
-        `;
-
-        return buttons;
-    }
-
-    async function renderOrders() {
-        const container = document.getElementById('ordersContainer');
-        const orders = await fetchOrders();
         
-        // フィルタリング
-        const filteredOrders = currentFilter === 'all' 
-            ? orders 
-            : orders.filter(o => o.status === currentFilter);
+        // Googleスプレッドシートからメニューを取得
+        async function fetchMenu() {
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getMenu&_=${Date.now()}`);
+                const data = await response.json();
+                return data.menuItems || [];
+            } catch (error) {
+                console.error('メニュー取得エラー:', error);
+                return [];
+            }
+        }
+        
+        // Googleスプレッドシートのメニューを更新
+        // ========== Googleスプレッドシート連携設定ここまで ==========
+        
+        const ADMIN_PASSWORD = '12345678';
+        let currentFilter = 'all';
+        let autoRefresh = null;
 
-        // 統計更新
-        const stats = {
-            pending: orders.filter(o => o.status === 'pending').length,
-            preparing: orders.filter(o => o.status === 'preparing').length,
-            ready: orders.filter(o => o.status === 'ready').length
-        };
-
-        document.getElementById('pendingCount').textContent = stats.pending;
-        document.getElementById('preparingCount').textContent = stats.preparing;
-        document.getElementById('readyCount').textContent = stats.ready;
-
-        if (filteredOrders.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-icon">📭</div>
-                    <div class="empty-text">現在オーダーはありません</div>
-                </div>
-            `;
-            return;
+        // スプレッドシートを開く
+        function openSpreadsheet() {
+            const spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/170A7eiI4K9ERjVyJsVRcxz7u0u-to1LANg5XwJUhygc/edit';
+            window.open(spreadsheetUrl, '_blank');
         }
 
-        // 新しい順にソート
-        filteredOrders.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-        let html = '';
-        filteredOrders.forEach(order => {
-            let itemsHtml = '';
-            for (const [id, item] of Object.entries(order.items)) {
-                const subtotal = item.price * item.quantity;
-                itemsHtml += `
-                    <div class="order-item">
-                        <span class="item-name-qty">${item.name} × ${item.quantity}</span>
-                        <span class="item-price">¥${subtotal.toLocaleString()}</span>
-                    </div>
+        // ログイン処理
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const password = document.getElementById('passwordInput').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('mainApp').classList.add('active');
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                renderOrders();
+                startAutoRefresh();
+            } else {
+                errorMessage.classList.add('show');
+                setTimeout(() => {
+                    errorMessage.classList.remove('show');
+                }, 3000);
+            }
+        });
+
+        // ログアウト
+        function logout() {
+            if (confirm('ログアウトしますか？')) {
+                sessionStorage.removeItem('adminLoggedIn');
+                stopAutoRefresh();
+                location.reload();
+            }
+        }
+
+        // ページ読み込み時のログインチェック
+        window.addEventListener('load', () => {
+            if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('mainApp').classList.add('active');
+                renderOrders();
+                startAutoRefresh();
+            }
+        });
+
+        // LocalStorageから注文データを取得
+        async function updateOrderStatusAndRefresh(orderNumber, newStatus) {
+            const success = await updateOrderStatus(orderNumber, newStatus);
+            if (success) {
+                await renderOrders();
+            }
+        }
+
+        async function deleteOrder(orderNumber) {
+            alert('削除機能は現在、Googleスプレッドシート版では利用できません。\nスプレッドシートから直接削除してください。');
+            // TODO: Apps Scriptに削除APIを追加する必要があります
+        }
+
+        async function clearCompleted() {
+            alert('一括削除機能は現在、Googleスプレッドシート版では利用できません。\nスプレッドシートから直接削除してください。');
+            // TODO: Apps Scriptに一括削除APIを追加する必要があります
+        }
+
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${hours}:${minutes}`;
+        }
+
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}/${month}/${day}`;
+        }
+
+        function isToday(timestamp) {
+            const date = new Date(timestamp);
+            const today = new Date();
+            return date.getFullYear() === today.getFullYear() &&
+                   date.getMonth() === today.getMonth() &&
+                   date.getDate() === today.getDate();
+        }
+
+        function getStatusBadge(status) {
+            const badges = {
+                pending: '<span class="status-badge badge-pending">待機中</span>',
+                preparing: '<span class="status-badge badge-preparing">調理中</span>',
+                ready: '<span class="status-badge badge-ready">完成</span>',
+                completed: '<span class="status-badge badge-completed">完了</span>'
+            };
+            return badges[status] || '';
+        }
+
+        function getActionButtons(order) {
+            const status = order.status;
+            let buttons = '';
+
+            if (status === 'pending') {
+                buttons = `
+                    <button class="action-btn btn-preparing" onclick="updateOrderStatusAndRefresh(${order.number}, 'preparing')">
+                        調理開始
+                    </button>
+                `;
+            } else if (status === 'preparing') {
+                buttons = `
+                    <button class="action-btn btn-ready" onclick="updateOrderStatusAndRefresh(${order.number}, 'ready')">
+                        完成
+                    </button>
+                `;
+            } else if (status === 'ready') {
+                buttons = `
+                    <button class="action-btn btn-complete" onclick="updateOrderStatusAndRefresh(${order.number}, 'completed')">
+                        提供完了
+                    </button>
                 `;
             }
 
-            html += `
-                <div class="order-card ${order.status}">
-                    <div class="order-header">
-                        <div>
-                            <span class="order-number">#${String(order.number).padStart(3, '0')}</span>
-                            ${getStatusBadge(order.status)}
-                        </div>
-                        <div class="order-time">${formatTime(order.timestamp)}</div>
-                    </div>
-                    <div class="order-items">
-                        ${itemsHtml}
-                    </div>
-                    <div class="order-total">
-                        <span>合計</span>
-                        <span class="total-amount">¥${order.total.toLocaleString()}</span>
-                    </div>
-                    <div class="order-actions">
-                        ${getActionButtons(order)}
-                    </div>
-                </div>
+            buttons += `
+                <button class="action-btn btn-delete" onclick="deleteOrder(${order.number})">
+                    削除
+                </button>
             `;
-        });
 
-        container.innerHTML = html;
-    }
-
-    async function refreshOrders() {
-        const btn = event.target;
-        const originalText = btn.textContent;
-        btn.textContent = '🔄 更新中...';
-        
-        await renderOrders();
-        
-        setTimeout(() => {
-            btn.textContent = originalText;
-        }, 500);
-    }
-
-    // 集計表示
-    async function showSummary() {
-        const orders = await fetchOrders();
-        const todayOrders = orders.filter(o => isToday(o.timestamp));
-
-        if (todayOrders.length === 0) {
-            alert('本日のオーダーはまだありません');
-            return;
+            return buttons;
         }
 
-        // 商品別集計
-        const itemSummary = {};
-        todayOrders.forEach(order => {
-            // order.itemsは配列形式で保存されている
-            if (Array.isArray(order.items)) {
-                order.items.forEach(item => {
-                    if (!itemSummary[item.name]) {
-                        itemSummary[item.name] = { quantity: 0, amount: 0 };
-                    }
-                    itemSummary[item.name].quantity += item.quantity;
-                    itemSummary[item.name].amount += item.price * item.quantity;
-                });
-            } else {
-                // 旧形式（オブジェクト形式）への対応
+        async function renderOrders() {
+            const container = document.getElementById('ordersContainer');
+            const orders = await fetchOrders();
+            
+            // フィルタリング
+            const filteredOrders = currentFilter === 'all' 
+                ? orders 
+                : orders.filter(o => o.status === currentFilter);
+
+            // 統計更新
+            const stats = {
+                pending: orders.filter(o => o.status === 'pending').length,
+                preparing: orders.filter(o => o.status === 'preparing').length,
+                ready: orders.filter(o => o.status === 'ready').length
+            };
+
+            document.getElementById('pendingCount').textContent = stats.pending;
+            document.getElementById('preparingCount').textContent = stats.preparing;
+            document.getElementById('readyCount').textContent = stats.ready;
+
+            if (filteredOrders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📭</div>
+                        <div class="empty-text">現在オーダーはありません</div>
+                    </div>
+                `;
+                return;
+            }
+
+            // 新しい順にソート
+            filteredOrders.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            let html = '';
+            filteredOrders.forEach(order => {
+                let itemsHtml = '';
                 for (const [id, item] of Object.entries(order.items)) {
-                    if (!itemSummary[item.name]) {
-                        itemSummary[item.name] = { quantity: 0, amount: 0 };
-                    }
-                    itemSummary[item.name].quantity += item.quantity;
-                    itemSummary[item.name].amount += item.price * item.quantity;
+                    const subtotal = item.price * item.quantity;
+                    itemsHtml += `
+                        <div class="order-item">
+                            <span class="item-name-qty">${item.name} × ${item.quantity}</span>
+                            <span class="item-price">¥${subtotal.toLocaleString()}</span>
+                        </div>
+                    `;
                 }
+
+                html += `
+                    <div class="order-card ${order.status}">
+                        <div class="order-header">
+                            <div>
+                                <span class="order-number">#${String(order.number).padStart(3, '0')}</span>
+                                ${getStatusBadge(order.status)}
+                            </div>
+                            <div class="order-time">${formatTime(order.timestamp)}</div>
+                        </div>
+                        <div class="order-items">
+                            ${itemsHtml}
+                        </div>
+                        <div class="order-total">
+                            <span>合計</span>
+                            <span class="total-amount">¥${order.total.toLocaleString()}</span>
+                        </div>
+                        <div class="order-actions">
+                            ${getActionButtons(order)}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        async function refreshOrders() {
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = '🔄 更新中...';
+            
+            await renderOrders();
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+            }, 500);
+        }
+
+        // 集計表示
+        async function showSummary() {
+            const orders = await fetchOrders();
+            const todayOrders = orders.filter(o => isToday(o.timestamp));
+
+            if (todayOrders.length === 0) {
+                alert('本日のオーダーはまだありません');
+                return;
+            }
+
+            // 商品別集計
+            const itemSummary = {};
+            todayOrders.forEach(order => {
+                // order.itemsは配列形式で保存されている
+                if (Array.isArray(order.items)) {
+                    order.items.forEach(item => {
+                        if (!itemSummary[item.name]) {
+                            itemSummary[item.name] = { quantity: 0, amount: 0 };
+                        }
+                        itemSummary[item.name].quantity += item.quantity;
+                        itemSummary[item.name].amount += item.price * item.quantity;
+                    });
+                } else {
+                    // 旧形式（オブジェクト形式）への対応
+                    for (const [id, item] of Object.entries(order.items)) {
+                        if (!itemSummary[item.name]) {
+                            itemSummary[item.name] = { quantity: 0, amount: 0 };
+                        }
+                        itemSummary[item.name].quantity += item.quantity;
+                        itemSummary[item.name].amount += item.price * item.quantity;
+                    }
+                }
+            });
+
+            // ステータス別集計
+            const statusSummary = {
+                pending: todayOrders.filter(o => o.status === 'pending').length,
+                preparing: todayOrders.filter(o => o.status === 'preparing').length,
+                ready: todayOrders.filter(o => o.status === 'ready').length,
+                completed: todayOrders.filter(o => o.status === 'completed').length
+            };
+
+            // 総売上
+            const totalAmount = todayOrders.reduce((sum, order) => sum + order.total, 0);
+
+            // テキストサマリー作成
+            const today = new Date();
+            const dateStr = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
+            
+            let summaryText = `━━━━━━━━━━━━━━━━━━━━\n`;
+            summaryText += `本日の売上集計\n`;
+            summaryText += `${dateStr}\n`;
+            summaryText += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+            
+            summaryText += `【注文件数】\n`;
+            summaryText += `総件数: ${todayOrders.length}件\n`;
+            summaryText += `待機中: ${statusSummary.pending}件\n`;
+            summaryText += `調理中: ${statusSummary.preparing}件\n`;
+            summaryText += `完成: ${statusSummary.ready}件\n`;
+            summaryText += `完了: ${statusSummary.completed}件\n\n`;
+            
+            summaryText += `【商品別販売数】\n`;
+            Object.entries(itemSummary)
+                .sort((a, b) => b[1].quantity - a[1].quantity)
+                .forEach(([name, data]) => {
+                    summaryText += `${name}: ${data.quantity}個 (¥${data.amount.toLocaleString()})\n`;
+                });
+            
+            summaryText += `\n【総売上】\n`;
+            summaryText += `¥${totalAmount.toLocaleString()}\n`;
+            summaryText += `━━━━━━━━━━━━━━━━━━━━\n`;
+
+            // モーダル表示
+            let html = '';
+            
+            // ステータス別
+            html += `<div class="summary-section">`;
+            html += `<div class="summary-section-title">注文状況</div>`;
+            html += `<div class="summary-item"><span class="summary-label">総件数</span><span class="summary-value">${todayOrders.length}件</span></div>`;
+            html += `<div class="summary-item"><span class="summary-label">待機中</span><span class="summary-value">${statusSummary.pending}件</span></div>`;
+            html += `<div class="summary-item"><span class="summary-label">調理中</span><span class="summary-value">${statusSummary.preparing}件</span></div>`;
+            html += `<div class="summary-item"><span class="summary-label">完成</span><span class="summary-value">${statusSummary.ready}件</span></div>`;
+            html += `<div class="summary-item"><span class="summary-label">完了</span><span class="summary-value">${statusSummary.completed}件</span></div>`;
+            html += `</div>`;
+
+            // 商品別
+            html += `<div class="summary-section">`;
+            html += `<div class="summary-section-title">商品別販売数</div>`;
+            Object.entries(itemSummary)
+                .sort((a, b) => b[1].quantity - a[1].quantity)
+                .forEach(([name, data]) => {
+                    html += `<div class="summary-item">`;
+                    html += `<span class="summary-label">${name}</span>`;
+                    html += `<span class="summary-value">${data.quantity}個 (¥${data.amount.toLocaleString()})</span>`;
+                    html += `</div>`;
+                });
+            html += `</div>`;
+
+            // 総売上
+            html += `<div class="summary-total">`;
+            html += `<div class="summary-total-label">本日の総売上</div>`;
+            html += `<div class="summary-total-value">¥${totalAmount.toLocaleString()}</div>`;
+            html += `</div>`;
+
+            // テキストサマリー
+            html += `<div class="summary-text">${summaryText}</div>`;
+            html += `<button class="copy-btn" onclick="copySummaryText()">📋 テキストをコピー</button>`;
+
+            document.getElementById('summaryBody').innerHTML = html;
+            document.getElementById('summaryModal').classList.add('active');
+
+            // テキストを保存
+            window.currentSummaryText = summaryText;
+        }
+
+        function closeSummary() {
+            document.getElementById('summaryModal').classList.remove('active');
+        }
+
+        function copySummaryText() {
+            navigator.clipboard.writeText(window.currentSummaryText).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✓ コピーしました！';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        // CSV出力
+        async function downloadCSV() {
+            const orders = await fetchOrders();
+            const todayOrders = orders.filter(o => isToday(o.timestamp));
+
+            if (todayOrders.length === 0) {
+                alert('本日のオーダーはまだありません');
+                return;
+            }
+
+            // CSVヘッダー
+            let csv = '注文番号,日時,ステータス,商品名,数量,単価,小計,合計\n';
+
+            // データ行
+            todayOrders.forEach(order => {
+                const dateTime = new Date(order.timestamp);
+                const dateStr = formatDate(order.timestamp);
+                const timeStr = formatTime(order.timestamp);
+                const status = {
+                    pending: '待機中',
+                    preparing: '調理中',
+                    ready: '完成',
+                    completed: '完了'
+                }[order.status];
+
+                // order.itemsは配列形式
+                const items = Array.isArray(order.items) ? order.items : Object.values(order.items);
+                items.forEach((item, index) => {
+                    const subtotal = item.price * item.quantity;
+                    csv += `${order.number},`;
+                    csv += `${dateStr} ${timeStr},`;
+                    csv += `${status},`;
+                    csv += `${item.name},`;
+                    csv += `${item.quantity},`;
+                    csv += `${item.price},`;
+                    csv += `${subtotal},`;
+                    csv += index === 0 ? `${order.total}\n` : '\n';
+                });
+            });
+
+            // BOM付きUTF-8でダウンロード
+            const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+            const blob = new Blob([bom, csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const today = new Date();
+            const filename = `order_${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}.csv`;
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // フィルタボタン
+        document.querySelectorAll('.control-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                renderOrders();
+            });
+        });
+
+        // 自動更新
+        function startAutoRefresh() {
+            autoRefresh = setInterval(async () => {
+                await renderOrders();
+            }, 3000);
+        }
+
+        function stopAutoRefresh() {
+            if (autoRefresh) clearInterval(autoRefresh);
+        }
+
+        // ページ離脱時に自動更新を停止
+        window.addEventListener('beforeunload', () => {
+            stopAutoRefresh();
+        });
+
+        // モーダル外クリックで閉じる
+        document.getElementById('summaryModal').addEventListener('click', (e) => {
+            if (e.target.id === 'summaryModal') {
+                closeSummary();
             }
         });
 
-        // ステータス別集計
-        const statusSummary = {
-            pending: todayOrders.filter(o => o.status === 'pending').length,
-            preparing: todayOrders.filter(o => o.status === 'preparing').length,
-            ready: todayOrders.filter(o => o.status === 'ready').length,
-            completed: todayOrders.filter(o => o.status === 'completed').length
-        };
-
-        // 総売上
-        const totalAmount = todayOrders.reduce((sum, order) => sum + order.total, 0);
-
-        // テキストサマリー作成
-        const today = new Date();
-        const dateStr = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
-        
-        let summaryText = `━━━━━━━━━━━━━━━━━━━━\n`;
-        summaryText += `本日の売上集計\n`;
-        summaryText += `${dateStr}\n`;
-        summaryText += `━━━━━━━━━━━━━━━━━━━━\n\n`;
-        
-        summaryText += `【注文件数】\n`;
-        summaryText += `総件数: ${todayOrders.length}件\n`;
-        summaryText += `待機中: ${statusSummary.pending}件\n`;
-        summaryText += `調理中: ${statusSummary.preparing}件\n`;
-        summaryText += `完成: ${statusSummary.ready}件\n`;
-        summaryText += `完了: ${statusSummary.completed}件\n\n`;
-        
-        summaryText += `【商品別販売数】\n`;
-        Object.entries(itemSummary)
-            .sort((a, b) => b[1].quantity - a[1].quantity)
-            .forEach(([name, data]) => {
-                summaryText += `${name}: ${data.quantity}個 (¥${data.amount.toLocaleString()})\n`;
-            });
-        
-        summaryText += `\n【総売上】\n`;
-        summaryText += `¥${totalAmount.toLocaleString()}\n`;
-        summaryText += `━━━━━━━━━━━━━━━━━━━━\n`;
-
-        // モーダル表示
-        let html = '';
-        
-        // ステータス別
-        html += `<div class="summary-section">`;
-        html += `<div class="summary-section-title">注文状況</div>`;
-        html += `<div class="summary-item"><span class="summary-label">総件数</span><span class="summary-value">${todayOrders.length}件</span></div>`;
-        html += `<div class="summary-item"><span class="summary-label">待機中</span><span class="summary-value">${statusSummary.pending}件</span></div>`;
-        html += `<div class="summary-item"><span class="summary-label">調理中</span><span class="summary-value">${statusSummary.preparing}件</span></div>`;
-        html += `<div class="summary-item"><span class="summary-label">完成</span><span class="summary-value">${statusSummary.ready}件</span></div>`;
-        html += `<div class="summary-item"><span class="summary-label">完了</span><span class="summary-value">${statusSummary.completed}件</span></div>`;
-        html += `</div>`;
-
-        // 商品別
-        html += `<div class="summary-section">`;
-        html += `<div class="summary-section-title">商品別販売数</div>`;
-        Object.entries(itemSummary)
-            .sort((a, b) => b[1].quantity - a[1].quantity)
-            .forEach(([name, data]) => {
-                html += `<div class="summary-item">`;
-                html += `<span class="summary-label">${name}</span>`;
-                html += `<span class="summary-value">${data.quantity}個 (¥${data.amount.toLocaleString()})</span>`;
-                html += `</div>`;
-            });
-        html += `</div>`;
-
-        // 総売上
-        html += `<div class="summary-total">`;
-        html += `<div class="summary-total-label">本日の総売上</div>`;
-        html += `<div class="summary-total-value">¥${totalAmount.toLocaleString()}</div>`;
-        html += `</div>`;
-
-        // テキストサマリー
-        html += `<div class="summary-text">${summaryText}</div>`;
-        html += `<button class="copy-btn" onclick="copySummaryText()">📋 テキストをコピー</button>`;
-
-        document.getElementById('summaryBody').innerHTML = html;
-        document.getElementById('summaryModal').classList.add('active');
-
-        // テキストを保存
-        window.currentSummaryText = summaryText;
-    }
-
-    function closeSummary() {
-        document.getElementById('summaryModal').classList.remove('active');
-    }
-
-    function copySummaryText() {
-        navigator.clipboard.writeText(window.currentSummaryText).then(() => {
-            const btn = event.target;
-            const originalText = btn.textContent;
-            btn.textContent = '✓ コピーしました！';
-            setTimeout(() => {
-                btn.textContent = originalText;
-            }, 2000);
+        document.getElementById('menuModal').addEventListener('click', (e) => {
+            if (e.target.id === 'menuModal') {
+                closeMenuEditor();
+            }
         });
-    }
-
-    // CSV出力
-    async function downloadCSV() {
-        const orders = await fetchOrders();
-        const todayOrders = orders.filter(o => isToday(o.timestamp));
-
-        if (todayOrders.length === 0) {
-            alert('本日のオーダーはまだありません');
-            return;
-        }
-
-        // CSVヘッダー
-        let csv = '注文番号,日時,ステータス,商品名,数量,単価,小計,合計\n';
-
-        // データ行
-        todayOrders.forEach(order => {
-            const dateTime = new Date(order.timestamp);
-            const dateStr = formatDate(order.timestamp);
-            const timeStr = formatTime(order.timestamp);
-            const status = {
-                pending: '待機中',
-                preparing: '調理中',
-                ready: '完成',
-                completed: '完了'
-            }[order.status];
-
-            // order.itemsは配列形式
-            const items = Array.isArray(order.items) ? order.items : Object.values(order.items);
-            items.forEach((item, index) => {
-                const subtotal = item.price * item.quantity;
-                csv += `${order.number},`;
-                csv += `${dateStr} ${timeStr},`;
-                csv += `${status},`;
-                csv += `${item.name},`;
-                csv += `${item.quantity},`;
-                csv += `${item.price},`;
-                csv += `${subtotal},`;
-                csv += index === 0 ? `${order.total}\n` : '\n';
-            });
-        });
-
-        // BOM付きUTF-8でダウンロード
-        const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
-        const blob = new Blob([bom, csv], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        const today = new Date();
-        const filename = `order_${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}.csv`;
-        a.href = url;
-        a.download = filename;
-        a.click();
-        URL.revokeObjectURL(url);
-    }
-
-    // フィルタボタン
-    document.querySelectorAll('.control-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            currentFilter = btn.dataset.filter;
-            renderOrders();
-        });
-    });
-
-    // 自動更新
-    function startAutoRefresh() {
-        autoRefresh = setInterval(async () => {
-            await renderOrders();
-        }, 3000);
-    }
-
-    function stopAutoRefresh() {
-        if (autoRefresh) clearInterval(autoRefresh);
-    }
-
-    // ページ離脱時に自動更新を停止
-    window.addEventListener('beforeunload', () => {
-        stopAutoRefresh();
-    });
-
-    // モーダル外クリックで閉じる
-    document.getElementById('summaryModal').addEventListener('click', (e) => {
-        if (e.target.id === 'summaryModal') {
-            closeSummary();
-        }
-    });
-
-    document.getElementById('menuModal').addEventListener('click', (e) => {
-        if (e.target.id === 'menuModal') {
-            closeMenuEditor();
-        }
-    });
-</script>
-```
-
+    </script>
 </body>
 </html>
