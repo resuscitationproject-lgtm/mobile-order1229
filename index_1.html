@@ -358,21 +358,43 @@
     </div>
 
     <script>
-        // ========== Googleスプレッドシート連携設定 ==========
+        // ========== Googleスプレッドシート連携設定（JSONP版） ==========
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby6IsQE5MMgbEQE4Xr6Nu_QUkDQ5trFEJBszbXuxlJQqQ7-VbdJgjW8WXdJXHR61ePi/exec';
         
-        // Googleスプレッドシートから注文データを取得
+        // JSONP リクエストを送信する関数
+        function jsonpRequest(url, params) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'jsonpCallback_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                
+                // コールバック関数をグローバルに登録
+                window[callbackName] = function(data) {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    resolve(data);
+                };
+                
+                // パラメータにコールバック名を追加
+                const urlParams = new URLSearchParams(params);
+                urlParams.append('callback', callbackName);
+                
+                // スクリプトタグを作成
+                const script = document.createElement('script');
+                script.src = url + '?' + urlParams.toString();
+                script.onerror = function() {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    reject(new Error('JSONP request failed'));
+                };
+                
+                document.body.appendChild(script);
+            });
+        }
+        
+        // Googleスプレッドシートから注文データを取得（JSONP版）
         async function fetchOrders() {
             try {
-                console.log('注文データ取得開始');
-                const url = `${SCRIPT_URL}?action=getOrders&_=${Date.now()}`;
-                const response = await fetch(url);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
+                console.log('注文データ取得開始（JSONP）');
+                const data = await jsonpRequest(SCRIPT_URL, { action: 'getOrders' });
                 console.log('取得した注文数:', data.orders ? data.orders.length : 0);
                 return data.orders || [];
             } catch (error) {
@@ -381,88 +403,50 @@
             }
         }
         
-        // Googleスプレッドシートに注文を保存
+        // Googleスプレッドシートに注文を保存（JSONP版）
         async function saveOrderToSheet(orderData) {
             try {
-                console.log('注文データ送信:', orderData);
-                console.log('送信先URL:', SCRIPT_URL);
+                console.log('注文データ送信（JSONP）:', orderData);
                 
-                const response = await fetch(`${SCRIPT_URL}?action=addOrder`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(orderData)
-                });
+                const params = {
+                    action: 'addOrder',
+                    number: orderData.number,
+                    items: JSON.stringify(orderData.items),
+                    total: orderData.total,
+                    status: orderData.status
+                };
                 
-                console.log('レスポンスステータス:', response.status);
-                console.log('レスポンスOK:', response.ok);
+                const data = await jsonpRequest(SCRIPT_URL, params);
+                console.log('レスポンスデータ:', data);
                 
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('エラーレスポンス:', errorText);
-                    throw new Error(`HTTP error! status: ${response.status}\n${errorText}`);
-                }
-                
-                const result = await response.json();
-                console.log('レスポンスデータ:', result);
-                
-                if (result.success) {
+                if (data.success) {
                     console.log('注文送信完了');
                     return true;
                 } else {
-                    console.error('保存失敗:', result.error);
-                    alert('注文の保存に失敗しました\n\nエラー: ' + (result.error || '不明なエラー') + 
-                          '\n\nスプレッドシートの設定を確認してください。');
+                    console.error('保存失敗:', data.error);
+                    alert('注文の保存に失敗しました: ' + (data.error || '不明なエラー'));
                     return false;
                 }
             } catch (error) {
                 console.error('注文保存エラー:', error);
-                console.error('エラータイプ:', error.name);
-                console.error('エラーメッセージ:', error.message);
-                
-                let errorMessage = '注文の保存に失敗しました。\n\n';
-                
-                if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-                    errorMessage += 'エラー: ネットワーク接続エラー\n\n';
-                    errorMessage += '考えられる原因:\n';
-                    errorMessage += '1. インターネット接続を確認\n';
-                    errorMessage += '2. Apps Scriptが正しくデプロイされているか確認\n';
-                    errorMessage += '3. Apps ScriptのURLが正しいか確認\n\n';
-                    errorMessage += 'Apps ScriptのURL:\n' + SCRIPT_URL;
-                } else {
-                    errorMessage += 'エラー: ' + error.message;
-                }
-                
-                alert(errorMessage);
+                alert('注文の保存に失敗しました。もう一度お試しください。');
                 return false;
             }
         }
         
-        // Googleスプレッドシートからメニューを取得
+        // Googleスプレッドシートからメニューを取得（JSONP版）
         async function fetchMenu() {
             try {
-                console.log('メニュー取得開始:', SCRIPT_URL);
-                const url = `${SCRIPT_URL}?action=getMenu&_=${Date.now()}`;
-                console.log('リクエストURL:', url);
-                
-                const response = await fetch(url);
-                console.log('レスポンスステータス:', response.status);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
+                console.log('メニュー取得開始（JSONP）');
+                const data = await jsonpRequest(SCRIPT_URL, { action: 'getMenu' });
                 console.log('取得したメニュー:', data);
                 return data.menuItems || [];
             } catch (error) {
                 console.error('メニュー取得エラー:', error);
-                console.error('エラー詳細:', error.message);
-                // エラー時はデフォルトメニューを返す
                 return [...defaultMenu];
             }
         }
+                
         
         // 次の注文番号を生成
         function getNextOrderNumberFromOrders(orders) {
