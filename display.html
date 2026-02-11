@@ -379,13 +379,39 @@
 
     <script>
         // ========== Googleスプレッドシート連携設定 ==========
+        // ========== Googleスプレッドシート連携設定（JSONP版） ==========
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby6IsQE5MMgbEQE4Xr6Nu_QUkDQ5trFEJBszbXuxlJQqQ7-VbdJgjW8WXdJXHR61ePi/exec';
         
-        // Googleスプレッドシートから注文データを取得
+        // JSONP リクエストを送信する関数
+        function jsonpRequest(url, params) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'jsonpCallback_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                
+                window[callbackName] = function(data) {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    resolve(data);
+                };
+                
+                const urlParams = new URLSearchParams(params);
+                urlParams.append('callback', callbackName);
+                
+                const script = document.createElement('script');
+                script.src = url + '?' + urlParams.toString();
+                script.onerror = function() {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    reject(new Error('JSONP request failed'));
+                };
+                
+                document.body.appendChild(script);
+            });
+        }
+        
+        // Googleスプレッドシートから注文データを取得（JSONP版）
         async function fetchOrders() {
             try {
-                const response = await fetch(`${SCRIPT_URL}?action=getOrders&_=${Date.now()}`);
-                const data = await response.json();
+                const data = await jsonpRequest(SCRIPT_URL, { action: 'getOrders' });
                 return data.orders || [];
             } catch (error) {
                 console.error('注文取得エラー:', error);
