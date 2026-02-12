@@ -313,6 +313,60 @@
             color: white;
             border-bottom-color: white;
         }
+
+        /* 送信中ポップアップ */
+        .loading-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-popup.active {
+            display: flex;
+        }
+
+        .loading-content {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 90%;
+            animation: slideUp 0.3s ease;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .loading-subtext {
+            font-size: 14px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -354,6 +408,15 @@
             </div>
             <button class="modal-btn btn-complete" onclick="completeOrder()">✓ 受け取り完了</button>
             <button class="modal-btn btn-close" onclick="closeModal()">閉じる</button>
+        </div>
+    </div>
+
+    <!-- 送信中ポップアップ -->
+    <div class="loading-popup" id="loadingPopup">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">注文を送信中...</div>
+            <div class="loading-subtext">しばらくお待ちください</div>
         </div>
     </div>
 
@@ -600,41 +663,70 @@
             orderBtn.disabled = false;
         }
 
+        // 注文送信中フラグ
+        let isSubmitting = false;
+
         // 注文処理
         document.getElementById('orderBtn').addEventListener('click', async () => {
-            const orders = await fetchOrders();
-            const orderNumber = getNextOrderNumberFromOrders(orders);
-            
-            // 注文アイテムを配列形式に変換
-            const orderItems = [];
-            for (const [id, item] of Object.entries(cart)) {
-                orderItems.push({
-                    name: item.name,
-                    price: item.price,
-                    quantity: item.quantity
-                });
+            // 送信中の場合は処理を中断
+            if (isSubmitting) {
+                console.log('既に送信処理中です');
+                return;
             }
-            
-            const orderData = {
-                number: orderNumber,
-                items: orderItems,
-                total: Object.values(cart).reduce((sum, item) => sum + (item.price * item.quantity), 0),
-                timestamp: new Date().toISOString(),
-                status: 'pending'
-            };
 
-            const success = await saveOrderToSheet(orderData);
+            // 送信中フラグを立てる
+            isSubmitting = true;
             
-            if (success) {
-                document.getElementById('orderNumber').textContent = String(orderNumber).padStart(3, '0');
-                document.getElementById('orderModal').classList.add('active');
+            // 送信中ポップアップを表示
+            document.getElementById('loadingPopup').classList.add('active');
+            
+            try {
+                const orders = await fetchOrders();
+                const orderNumber = getNextOrderNumberFromOrders(orders);
                 
-                // カートをリセット
-                cart = {};
-                document.querySelectorAll('.quantity-display').forEach(display => {
-                    display.textContent = '0';
-                });
-                renderCart();
+                // 注文アイテムを配列形式に変換
+                const orderItems = [];
+                for (const [id, item] of Object.entries(cart)) {
+                    orderItems.push({
+                        name: item.name,
+                        price: item.price,
+                        quantity: item.quantity
+                    });
+                }
+                
+                const orderData = {
+                    number: orderNumber,
+                    items: orderItems,
+                    total: Object.values(cart).reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                    timestamp: new Date().toISOString(),
+                    status: 'pending'
+                };
+
+                const success = await saveOrderToSheet(orderData);
+                
+                // 送信中ポップアップを非表示
+                document.getElementById('loadingPopup').classList.remove('active');
+                
+                if (success) {
+                    document.getElementById('orderNumber').textContent = String(orderNumber).padStart(3, '0');
+                    document.getElementById('orderModal').classList.add('active');
+                    
+                    // カートをリセット
+                    cart = {};
+                    document.querySelectorAll('.quantity-display').forEach(display => {
+                        display.textContent = '0';
+                    });
+                    renderCart();
+                }
+            } catch (error) {
+                console.error('注文処理エラー:', error);
+                // 送信中ポップアップを非表示
+                document.getElementById('loadingPopup').classList.remove('active');
+                alert('注文の送信中にエラーが発生しました。もう一度お試しください。');
+            } finally {
+                // 送信中フラグを解除
+                isSubmitting = false;
+            };
             }
         });
 
